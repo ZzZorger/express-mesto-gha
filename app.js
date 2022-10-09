@@ -16,12 +16,10 @@ app.use((req, res, next) => {
   req.user = {
     _id: '6342efd3f405cf9b614b7996'
   };
-
   next();
 });
 app.use('/users', userRouter)
 app.use('/cards', cardRouter)
-
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`)
 })
