@@ -24,7 +24,12 @@ module.exports.deleteCard = (req, res) => {
     }
     res.status(200).send({ message: 'Карточка удалена' })
   })
-  .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию' }));
+  .catch((err) => {
+    if(err.name === 'CastError') {
+      return res.status(400).send({ message: 'Неверный формат id'})
+    }
+    res.status(500).send({ message: 'Ошибка по умолчанию'})
+  });
 };
 module.exports.likeCard = (req, res) => {
   Card.findByIdAndUpdate(
