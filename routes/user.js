@@ -1,15 +1,22 @@
 const router = require('express').Router();
 const user = require('../models/user.js');
 
-router.get('/', (req, res) => {
+router.get('/users', (req, res) => {
   user.find({})
   .then(users => res.send({ data: users}))
   .catch(() => res.status(500).send({ message: 'Произошла ошибка'}));
 });
-router.get('/:id', (req, res) => {
+router.get('/users/:userId', (req, res) => {
   user.findById(req.params.id)
   .then(user => res.send({ data: user }))
   .catch(() => res.status(500).send({ message: 'Произошла ошибка'}));
+});
+router.post('/users', (req, res) => {
+  const { name, about, avatar } = req.body;
+  console.log(req.body)
+  user.create({ name, about, avatar })
+  // .then(user => res.send({ data: user }))
+  // .catch(() => res.status(500).send({ message: 'Произошла ошибка'}));
 })
 // router.get('/', (req, res) => {
 //   Film.find({})
