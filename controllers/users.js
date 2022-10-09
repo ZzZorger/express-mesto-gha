@@ -8,12 +8,17 @@ module.exports.getUser = (req, res) => {
 module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
   .then(user => {
-    if (user === null) {
+    if (!user) {
       return res.status(404).send({message: 'Пользователь по указанному _id не найден'})
     }
     res.status(200).send({ data: user })
   })
-  .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию'}));
+  .catch((err) => {
+    if(err.name === 'CastError') {
+      return res.status(400).send({ message: 'Неверный формат id'})
+    }
+    res.status(500).send({ message: 'Ошибка по умолчанию'})
+  })
 }
 module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
