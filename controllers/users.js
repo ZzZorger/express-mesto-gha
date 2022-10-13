@@ -22,15 +22,9 @@ module.exports.getUserId = (req, res) => {
     });
 };
 module.exports.createUser = (req, res) => {
-  // const { name, about, avatar, email, password } = req.body;
+  const { name, about, avatar, email, password } = req.body;
   bcrypt.hash(req.body.password, 10);
-  User.create({
-    name: req.body.name,
-    about: req.body.about,
-    avatar: req.body.avatar,
-    email: req.body.email,
-    password: req.body.password,
-  })
+  User.create(name, about, avatar, email, password)
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -71,3 +65,24 @@ module.exports.updateAvatar = (req, res) => {
       return res.status(500).send({ message: 'Ошибка по умолчанию' });
     });
 };
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+      return bcrypt.compare(password, user.password);
+    })
+    .then((matched) => {
+      if (!matched) {
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+      res.send({ message: 'Всё верно!' });
+    })
+    .catch((err) => {
+      res
+        .status(401)
+        .send({ message: err.message });
+    });
+}
