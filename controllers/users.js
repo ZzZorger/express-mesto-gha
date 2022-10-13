@@ -22,15 +22,18 @@ module.exports.getUserId = (req, res) => {
     });
 };
 module.exports.createUser = (req, res) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
   bcrypt.hash(req.body.password, 10);
-  User.create({ name, about, avatar, email, password })
+  User.create({
+    name, about, avatar, email, password,
+  })
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
       }
-      console.dir(err)
       return res.status(500).send({ message: 'Ошибка по умолчанию' });
     });
 };
@@ -70,16 +73,16 @@ module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
-  .then((user) => {
-    // аутентификация успешна! пользователь в переменной user
-    res.status(200).send({ data: user })
-  })
-  .catch((err) => {
-    // ошибка аутентификации
-    res
-      .status(401)
-      .send({ message: err.message });
-  });
+    .then((user) => {
+      // аутентификация успешна! пользователь в переменной user
+      res.status(200).send({ data: user });
+    })
+    .catch((err) => {
+      // ошибка аутентификации
+      res
+        .status(401)
+        .send({ message: err.message });
+    });
   // User.findOne({ email })
   //   .then((user) => {
   //     if (!user) {
@@ -98,4 +101,4 @@ module.exports.login = (req, res) => {
   //       .status(401)
   //       .send({ message: err.message });
   //   });
-}
+};
