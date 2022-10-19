@@ -7,6 +7,11 @@ module.exports.getUser = (req, res) => {
     .then((users) => res.status(200).send({ data: users }))
     .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию' }));
 };
+module.exports.getUserMe = (req, res) => {
+  User.find({})
+    .then((users) => res.status(200).send({ data: users }))
+    .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию' }));
+};
 module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
@@ -27,13 +32,13 @@ module.exports.createUser = (req, res) => {
     name, about, avatar, email,
   } = req.body;
   bcrypt.hash(req.body.password, 10)
-  .then((hash) => User.create({
-    name,
-    about,
-    avatar,
-    email,
-    password: hash,
-  }))
+    .then((hash) => User.create({
+      name,
+      about,
+      avatar,
+      email,
+      password: hash,
+    }))
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
