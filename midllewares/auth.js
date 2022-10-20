@@ -1,22 +1,28 @@
 const jwt = require('jsonwebtoken');
 
+const handleAuthError = (res) => {
+  res
+    .status(401)
+    .send({ message: 'Необходима авторизация' });
+};
+
+const extractBearerToken = (header) => header.replace('Bearer ', '');
+
 module.exports = (req, res, next) => {
+  const { token } = req.cookies.token;
+  // console.log(req.cookies.token)
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res
-      .status(401)
-      .send({ message: 'Необходима авторизация' });
+    return handleAuthError(res);
   }
 
-  const token = authorization.replace('Bearer ', '');
+  // const token = extractBearerToken(authorization);
   let payload;
   try {
     payload = jwt.verify(token, 'some-secret-key');
   } catch (err) {
-    return res
-      .status(401)
-      .send({ message: 'Необходима авторизация' });
+    return handleAuthError(res);
   }
   req.user = payload;
 

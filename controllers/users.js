@@ -9,7 +9,8 @@ module.exports.getUser = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию' }));
 };
 module.exports.getUserMe = (req, res, next) => {
-  console.dir(req.user)
+  console.log(req.params)
+  console.log('done')
   // User.findById(req.user._id)
   //   .then((user) => {
   //     const {
@@ -35,6 +36,7 @@ module.exports.getUserMe = (req, res, next) => {
   //   .catch((err) => next(err));
 };
 module.exports.getUserId = (req, res) => {
+  console.log(req.params)
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -114,8 +116,8 @@ module.exports.login = (req, res) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.cookie('token', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
       res.send({ token });
-      // res.status(200).send({ data: user });
     })
     .catch((err) => {
       res
