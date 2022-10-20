@@ -29,14 +29,8 @@ const userSchema = new mongoose.Schema({
     required: true,
   },
 });
-// userSchema.static.validateEmail = function (email) {
-//   return this.findOne({ email })
-//   .then((user) {
-//     if (!user) {
-//       return Promise.reject.compare(new Error('Неправильные почта или пароль'));
-//     }
-//   })
-// };
+
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
     .then((user) => {

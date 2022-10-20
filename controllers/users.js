@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const validator = require('validator');
 const User = require('../models/user');
 
 module.exports.getUser = (req, res) => {
@@ -7,10 +8,31 @@ module.exports.getUser = (req, res) => {
     .then((users) => res.status(200).send({ data: users }))
     .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию' }));
 };
-module.exports.getUserMe = (req, res) => {
-  User.find({})
-    .then((users) => res.status(200).send({ data: users }))
-    .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию' }));
+module.exports.getUserMe = (req, res, next) => {
+  console.dir(req.user)
+  // User.findById(req.user._id)
+  //   .then((user) => {
+  //     const {
+  //       _id, name, about, avatar, email,
+  //     } = user;
+  //     if (user) {
+  //       // res.status(200).send({
+  //       //   _id: user._id,
+  //       //   name: user.name,
+  //       //   about: user.about,
+  //       //   avatar: user.avatar,
+  //       //   email: user.email,
+  //       // });
+  //       res.status(200).send({
+  //         _id,
+  //         name,
+  //         about,
+  //         avatar,
+  //         email,
+  //       });
+  //     }
+  //   })
+  //   .catch((err) => next(err));
 };
 module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
@@ -28,6 +50,10 @@ module.exports.getUserId = (req, res) => {
     });
 };
 module.exports.createUser = (req, res) => {
+  if (!validator.isEmail(req.body.email)) {
+    res.status(400).send({ message: 'Неверно введен email' });
+    return;
+  }
   const {
     name, about, avatar, email,
   } = req.body;
@@ -43,6 +69,9 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+      }
+      if (err.code === 11000) {
+        return res.status(400).send({ message: 'Пользователь с данной почтой уже зарегестрирован' });
       }
       return res.status(500).send({ message: 'Ошибка по умолчанию' });
     });
