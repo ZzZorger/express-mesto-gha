@@ -9,7 +9,7 @@ const handleAuthError = (res) => {
 const extractBearerToken = (header) => header.replace('Bearer ', '');
 
 module.exports = (req, res, next) => {
-  const { token } = req.cookies.token;
+  // const { token } = req.cookies.token;
   // console.log(req.cookies.token)
   const { authorization } = req.headers;
 
@@ -17,7 +17,7 @@ module.exports = (req, res, next) => {
     return handleAuthError(res);
   }
 
-  // const token = extractBearerToken(authorization);
+  const token = extractBearerToken(authorization);
   let payload;
   try {
     payload = jwt.verify(token, 'some-secret-key');

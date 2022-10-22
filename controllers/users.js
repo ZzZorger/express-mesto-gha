@@ -8,35 +8,34 @@ module.exports.getUser = (req, res) => {
     .then((users) => res.status(200).send({ data: users }))
     .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию' }));
 };
-module.exports.getUserMe = (req, res, next) => {
-  console.log(req.params)
-  console.log('done')
-  // User.findById(req.user._id)
-  //   .then((user) => {
-  //     const {
-  //       _id, name, about, avatar, email,
-  //     } = user;
-  //     if (user) {
-  //       // res.status(200).send({
-  //       //   _id: user._id,
-  //       //   name: user.name,
-  //       //   about: user.about,
-  //       //   avatar: user.avatar,
-  //       //   email: user.email,
-  //       // });
-  //       res.status(200).send({
-  //         _id,
-  //         name,
-  //         about,
-  //         avatar,
-  //         email,
-  //       });
-  //     }
-  //   })
-  //   .catch((err) => next(err));
-};
+// module.exports.getUserMe = (req, res, next) => {
+//   console.log(req.params)
+//   console.log('done')
+//   // User.findById(req.user._id)
+//   //   .then((user) => {
+//   //     const {
+//   //       _id, name, about, avatar, email,
+//   //     } = user;
+//   //     if (user) {
+//   //       // res.status(200).send({
+//   //       //   _id: user._id,
+//   //       //   name: user.name,
+//   //       //   about: user.about,
+//   //       //   avatar: user.avatar,
+//   //       //   email: user.email,
+//   //       // });
+//   //       res.status(200).send({
+//   //         _id,
+//   //         name,
+//   //         about,
+//   //         avatar,
+//   //         email,
+//   //       });
+//   //     }
+//   //   })
+//   //   .catch((err) => next(err));
+// };
 module.exports.getUserId = (req, res) => {
-  console.log(req.params)
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
@@ -115,7 +114,7 @@ module.exports.login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ id: user.id }, 'some-secret-key', { expiresIn: '7d' });
       res.cookie('token', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
       res.send({ token });
     })
@@ -124,22 +123,4 @@ module.exports.login = (req, res) => {
         .status(401)
         .send({ message: err.message });
     });
-  // User.findOne({ email })
-  //   .then((user) => {
-  //     if (!user) {
-  //       return Promise.reject(new Error('Неправильные почта или пароль'));
-  //     }
-  //     return bcrypt.compare(password, user.password);
-  //   })
-  //   .then((matched) => {
-  //     if (!matched) {
-  //       return Promise.reject(new Error('Неправильные почта или пароль'));
-  //     }
-  //     res.send({ message: 'Всё верно!' });
-  //   })
-  //   .catch((err) => {
-  //     res
-  //       .status(401)
-  //       .send({ message: err.message });
-  //   });
 };
