@@ -3,38 +3,31 @@ const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const User = require('../models/user');
 
+const { JWT_SECRET } = process.env;
+
 module.exports.getUser = (req, res) => {
   User.find({})
     .then((users) => res.status(200).send({ data: users }))
     .catch(() => res.status(500).send({ message: 'Ошибка по умолчанию' }));
 };
-// module.exports.getUserMe = (req, res, next) => {
-//   console.log(req.params)
-//   console.log('done')
-//   // User.findById(req.user._id)
-//   //   .then((user) => {
-//   //     const {
-//   //       _id, name, about, avatar, email,
-//   //     } = user;
-//   //     if (user) {
-//   //       // res.status(200).send({
-//   //       //   _id: user._id,
-//   //       //   name: user.name,
-//   //       //   about: user.about,
-//   //       //   avatar: user.avatar,
-//   //       //   email: user.email,
-//   //       // });
-//   //       res.status(200).send({
-//   //         _id,
-//   //         name,
-//   //         about,
-//   //         avatar,
-//   //         email,
-//   //       });
-//   //     }
-//   //   })
-//   //   .catch((err) => next(err));
-// };
+module.exports.getUserMe = (req, res, next) => {
+  User.findById(req.user._id)
+    .then((user) => {
+      const {
+        _id, name, about, avatar, email,
+      } = user;
+      if (user) {
+        res.status(200).send({
+          _id,
+          name,
+          about,
+          avatar,
+          email,
+        });
+      }
+    })
+    .catch((err) => next(err));
+};
 module.exports.getUserId = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
@@ -111,10 +104,9 @@ module.exports.updateAvatar = (req, res) => {
 };
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
-
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ id: user.id }, 'some-secret-key', { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.cookie('token', token, { maxAge: 3600000 * 24 * 7, httpOnly: true });
       res.send({ token });
     })
