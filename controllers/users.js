@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const validator = require('validator');
+const NotFoundError = require('../errors/NotFoundError');
 const User = require('../models/user');
 
 const { JWT_SECRET } = process.env;
@@ -28,20 +29,31 @@ module.exports.getUserMe = (req, res, next) => {
     })
     .catch((err) => next(err));
 };
-module.exports.getUserId = (req, res) => {
+// module.exports.getUserId = (req, res) => {
+//   User.findById(req.params.userId)
+//     .then((user) => {
+//       if (!user) {
+//         return res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+//       }
+//       return res.status(200).send({ data: user });
+//     })
+//     .catch((err) => {
+//       if (err.name === 'CastError') {
+//         return res.status(400).send({ message: 'Неверный формат id' });
+//       }
+//       return res.status(500).send({ message: 'Ошибка по умолчанию' });
+//     });
+// };
+module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (!user) {
-        return res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
+        throw new NotFoundError('Пользователь по указанному _id не найден')
+        // return res.status(404).send({ message: 'Пользователь по указанному _id не найден' });
       }
-      return res.status(200).send({ data: user });
+      res.send(user)
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        return res.status(400).send({ message: 'Неверный формат id' });
-      }
-      return res.status(500).send({ message: 'Ошибка по умолчанию' });
-    });
+    .catch(next)
 };
 module.exports.createUser = (req, res) => {
   if (!validator.isEmail(req.body.email)) {
