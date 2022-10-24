@@ -12,7 +12,7 @@ const errorHandler = require('./middlewares/errorHandler');
 const { PORT = 3000 } = process.env;
 const app = express();
 
-app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser());
 mongoose.connect('mongodb://localhost:27017/mestodb', {
