@@ -35,7 +35,7 @@ module.exports.getUserId = (req, res, next) => {
   User.findById(req.params.userId)
     .orFail(new NotFoundError(`Пользователь с id '${req.params.userId}' не найден`))
     .then((user) => {
-      res.send(user)
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -43,7 +43,7 @@ module.exports.getUserId = (req, res, next) => {
       } else {
         next(err);
       }
-    })
+    });
 };
 module.exports.createUser = (req, res, next) => {
   if (!validator.isEmail(req.body.email)) {
@@ -64,11 +64,10 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
-      }
-      else if (err.code === 11000) {
+      } else if (err.code === 11000) {
         next(new BadRequestError('Пользователь с данной почтой уже зарегестрирован'));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -76,14 +75,12 @@ module.exports.updateUser = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
     .orFail(new NotFoundError(`Пользователь с id '${req.user._id}' не найден`))
-    .then((user) => {
-      return res.status(200).send({ data: user });
-    })
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -91,14 +88,12 @@ module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
     .orFail(new NotFoundError(`Пользователь с id '${req.user._id}' не найден`))
-    .then((user) => {
-      return res.status(200).send({ data: user });
-    })
+    .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении аватара'));
       } else {
-        next(err)
+        next(err);
       }
     });
 };
@@ -111,8 +106,7 @@ module.exports.login = (req, res, next) => {
       res.send({ token });
     })
     .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
+      console.log(err.name);
+      next(err);
     });
 };
