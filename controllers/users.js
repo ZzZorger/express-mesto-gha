@@ -46,7 +46,14 @@ module.exports.getUserId = (req, res, next) => {
       }
     });
 };
-module.exports.createUser = (req, res, next) => {
+// {
+//   "email": "em@em.ru",
+//   "password": "longPass",
+//   "name": "test",
+//   "about": "about",
+//   "avatar": "https://ya.ru/av.bmp"
+//   }
+module.exports.createUser = (req, res, next, hash) => {
   if (!validator.isEmail(req.body.email)) {
     throw new ForbiddenError('Неверно введен email');
   }
@@ -59,7 +66,7 @@ module.exports.createUser = (req, res, next) => {
       about,
       avatar,
       email,
-      // password: hash,
+      password: hash,
     }))
     .then((user) => res.status(200).send({ data: user }))
     .catch((err) => {
