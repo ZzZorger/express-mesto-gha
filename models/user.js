@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../errors/UnauthorizedError');
-require('mongoose-type-url');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,9 +17,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    // type: mongoose.SchemaType.Url,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-    // arguments: ['-._~:/?#[]@!$&\'()*+,;='],
   },
   email: {
     type: String,
@@ -35,23 +32,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-// eslint-disable-next-line func-names
-// userSchema.statics.findUserByCredentials = function (email, password) {
-//   return this.findOne({ email }).select('+password')
-// .then((user) => {
-//   if (!user) {
-//     return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
-//   }
-//       return bcrypt.compare(password, user.password)
-//         .then((matched) => {
-//           if (!matched) {
-//             return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
-//           }
-//           return user;
-//         });
-//     });
-// };
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   return this.findOne({ email }).select('+password')
     .orFail(new UnauthorizedError('Неправильные почта или пароль'))
     .then((user) => bcrypt.compare(password, user.password)
