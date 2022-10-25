@@ -12,7 +12,7 @@ const errorHandler = require('./middlewares/errorHandler');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-
+const URLregex = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+/;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser());
@@ -43,7 +43,7 @@ app.use('/users', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string(),
+    avatar: Joi.string().pattern(URLregex),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
@@ -51,7 +51,7 @@ app.use('/users', celebrate({
 app.use('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
-    link: Joi.string(),
+    link: Joi.string().pattern(URLregex),
     owner: Joi.string().hex().length(24).required(),
     likes: Joi.string().hex().length(24).required(),
     createdAt: Joi.date(),
