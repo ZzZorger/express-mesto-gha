@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
-const { celebrate, Joi } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
@@ -60,12 +60,11 @@ app.use('/cards', celebrate({
 app.use('*', (req, res) => (
   res.status(404).send({ message: 'Страница не найдена' })
 ));
-// app.use(errors());
-app.use(errorHandler);
+app.use(errors());
 app.use((err, req, res, next) => {
   res.send({ message: err.message });
   next();
 });
-// app.use(errorHandler);
+app.use(errorHandler);
 app.listen(PORT, () => {
 });
