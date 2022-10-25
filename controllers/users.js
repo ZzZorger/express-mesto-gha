@@ -53,7 +53,7 @@ module.exports.getUserId = (req, res, next) => {
 //   "about": "about",
 //   "avatar": "https://ya.ru/av.bmp"
 //   }
-module.exports.createUser = (req, res, next, hash) => {
+module.exports.createUser = (req, res, next) => {
   if (!validator.isEmail(req.body.email)) {
     throw new ForbiddenError('Неверно введен email');
   }
@@ -61,14 +61,19 @@ module.exports.createUser = (req, res, next, hash) => {
     name, about, avatar, email,
   } = req.body;
   bcrypt.hash(req.body.password, 10)
-    .then(() => User.create({
+    .then((hash) => User.create({
       name,
       about,
       avatar,
       email,
       password: hash,
     }))
-    .then((user) => res.status(200).send({ data: user }))
+    .then(() => res.status(200).send({
+      name,
+      about,
+      avatar,
+      email,
+    }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при создании пользователя'));
