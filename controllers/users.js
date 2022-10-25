@@ -46,13 +46,6 @@ module.exports.getUserId = (req, res, next) => {
       }
     });
 };
-// {
-//   "email": "em@em.ru",
-//   "password": "longPass",
-//   "name": "test",
-//   "about": "about",
-//   "avatar": "https://ya.ru/av.bmp"
-//   }
 module.exports.createUser = (req, res, next) => {
   if (!validator.isEmail(req.body.email)) {
     throw new ForbiddenError('Неверно введен email');
