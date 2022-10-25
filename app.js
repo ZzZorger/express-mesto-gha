@@ -25,26 +25,26 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().email(),
+    email: Joi.string().min(5).required().email(),
     password: Joi.string().required().min(8),
   }),
 }), login);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(8),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(URLregex),
-    email: Joi.string().required().email(),
+    email: Joi.string().min(5).required().email(),
     password: Joi.string().required().min(8),
   }),
 }), createUser);
 app.use(auth);
 app.use('/users', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().min(2).max(8),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(URLregex),
-    email: Joi.string().required().email(),
+    email: Joi.string().min(5).required().email(),
     password: Joi.string().required().min(8),
   }),
 }), userRouter);
@@ -61,10 +61,11 @@ app.use('*', (req, res) => (
   res.status(404).send({ message: 'Страница не найдена' })
 ));
 app.use(errors());
-app.use((err, req, res, next) => {
-  res.send({ message: err.message });
-  next();
-});
+// app.use((err, req, res, next) => {
+//   res.send({ message: err.message });
+//   next();
+// });
 app.use(errorHandler);
+
 app.listen(PORT, () => {
 });
