@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+require('mongoose-type-url');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -15,8 +16,10 @@ const userSchema = new mongoose.Schema({
     default: 'Исследователь',
   },
   avatar: {
-    type: String,
+    // type: String,
+    type: mongoose.SchemaType.Url,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    // arguments: ['-._~:/?#[]@!$&\'()*+,;='],
   },
   email: {
     type: String,
