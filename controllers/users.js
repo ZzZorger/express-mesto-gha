@@ -112,6 +112,7 @@ module.exports.login = (req, res, next) => {
       res.send({ token });
     })
     .catch((err) => {
+      console.log(err)
       next(err);
     });
 };
