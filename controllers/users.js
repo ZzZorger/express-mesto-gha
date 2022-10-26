@@ -7,7 +7,7 @@ const ForbiddenError = require('../errors/ForbiddenError');
 const NotFoundError = require('../errors/NotFoundError');
 const User = require('../models/user');
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET = 'secret_default' } = process.env;
 
 module.exports.getUser = (req, res, next) => {
   User.find({})
