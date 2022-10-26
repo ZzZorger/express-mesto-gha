@@ -8,7 +8,6 @@ const NotFoundError = require('../errors/NotFoundError');
 const User = require('../models/user');
 
 const { JWT_SECRET = 'secret_default' } = process.env;
-
 module.exports.getUser = (req, res, next) => {
   User.find({})
     .then((users) => res.status(200).send({ data: users }))
