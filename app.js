@@ -10,6 +10,7 @@ const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const errorHandler = require('./middlewares/errorHandler');
 
+const { JWT_SECRET_KEY = 'secret_default' } = process.env;
 const { PORT = 3000 } = process.env;
 const app = express();
 const URLregex = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+/;
