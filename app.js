@@ -39,24 +39,8 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 app.use(auth);
-app.use('/users', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(URLregex),
-    email: Joi.string().min(5).required().email(),
-    password: Joi.string().required().min(8),
-  }),
-}), userRouter);
-app.use('/cards', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    link: Joi.string().pattern(URLregex),
-    owner: Joi.string().hex().length(24).required(),
-    likes: Joi.string().hex().length(24).required(),
-    createdAt: Joi.date(),
-  }),
-}), cardRouter);
+app.use('/users', userRouter);
+app.use('/cards', cardRouter);
 app.use('*', (req, res) => (
   res.status(404).send({ message: 'Страница не найдена' })
 ));
