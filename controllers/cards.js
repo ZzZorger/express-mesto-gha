@@ -32,7 +32,8 @@ module.exports.deleteCard = (req, res, next) => {
       if (card) {
         if (card.owner.toString() === ownerId) {
           card.delete()
-            .then(() => res.status(200).send({ message: `Карточка с id '${req.params.cardId}' успешно удалена` }));
+            .then(() => res.status(200).send({ message: `Карточка с id '${req.params.cardId}' успешно удалена` }))
+            .catch(next);
         } else { throw new ForbiddenError('Карточка пренадлежит другому пользователю'); }
       }
     })
