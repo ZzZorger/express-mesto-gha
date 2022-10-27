@@ -9,10 +9,8 @@ const URLregex = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F]
 router.get('/', getCards);
 router.post('/', celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
-    link: Joi.string().pattern(URLregex),
-    owner: Joi.string().hex().length(24).required(),
-    createdAt: Joi.date(),
+    name: Joi.string().min(2).max(30).required(),
+    link: Joi.string().pattern(URLregex).required(),
   }),
 }), createCard);
 router.delete('/:cardId', celebrate({
