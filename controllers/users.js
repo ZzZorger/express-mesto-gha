@@ -37,13 +37,14 @@ module.exports.getUserId = (req, res, next) => {
     .then((user) => {
       res.send(user);
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError(`'${req.params.userId}' не является корректным идентификатором`));
-      } else {
-        next(err);
-      }
-    });
+    // .catch((err) => {
+    //   if (err.name === 'CastError') {
+    //     next(new BadRequestError(`'${req.params.userId}' не является корректным идентификатором`));
+    //   } else {
+    //     next(err);
+    //   }
+    // });
+    .catch(next);
 };
 module.exports.createUser = (req, res, next) => {
   if (!validator.isEmail(req.body.email)) {
@@ -108,7 +109,6 @@ module.exports.login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.status(200).cookie('token', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).send({ token });
-      // res;
     })
     .catch(next);
 };
