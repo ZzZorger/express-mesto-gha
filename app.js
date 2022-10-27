@@ -9,10 +9,11 @@ const cardRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
 const { login, createUser } = require('./controllers/users');
 const errorHandler = require('./middlewares/errorHandler');
+const NotFoundError = require('./errors/NotFoundError');
 
 const { PORT = 3000 } = process.env;
 const app = express();
-const URLregex = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+/;
+const URLregex = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.ru/;
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cookieParser());
@@ -26,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().min(5).required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 }), login);
 app.post('/signup', celebrate({
@@ -35,14 +36,14 @@ app.post('/signup', celebrate({
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(URLregex),
     email: Joi.string().min(5).required().email(),
-    password: Joi.string().required().min(8),
+    password: Joi.string().required(),
   }),
 }), createUser);
 app.use(auth);
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
-app.use('*', (req, res) => (
-  res.status(404).send({ message: 'Страница не найдена' })
+app.use('*', (req, res, next) => (
+  next(new NotFoundError('Страница не найдена'))
 ));
 app.use(errors());
 app.use(errorHandler);

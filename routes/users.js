@@ -4,13 +4,13 @@ const {
   getUser, getUserMe, getUserId, updateUser, updateAvatar,
 } = require('../controllers/users');
 
-const URLregex = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+/;
+const URLregex = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.ru/;
 
 router.get('/', getUser);
 router.get('/me', getUserMe);
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
+    userId: Joi.string().length(24).hex().required(),
   }),
 }), getUserId);
 router.patch('/me', celebrate({

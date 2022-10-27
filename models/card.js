@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const URLregex = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.ru/;
+
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -20,6 +22,7 @@ const cardSchema = new mongoose.Schema({
     type: [mongoose.ObjectId],
     ref: 'user',
     default: [],
+    match: URLregex,
   },
   createdAt: {
     type: Date,
