@@ -37,14 +37,13 @@ module.exports.getUserId = (req, res, next) => {
     .then((user) => {
       res.send(user);
     })
-    // .catch((err) => {
-    //   if (err.name === 'CastError') {
-    //     next(new BadRequestError(`'${req.params.userId}' не является корректным идентификатором`));
-    //   } else {
-    //     next(err);
-    //   }
-    // });
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError(`'${req.params.userId}' не является корректным идентификатором`));
+      } else {
+        next(err);
+      }
+    });
 };
 module.exports.createUser = (req, res, next) => {
   if (!validator.isEmail(req.body.email)) {
