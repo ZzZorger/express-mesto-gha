@@ -27,19 +27,6 @@ router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
   }),
-  body: Joi.object().keys({
-    owner: Joi.string().hex().length(24).required(),
-  }),
 }), dislikeCard);
 
 module.exports = router;
-
-// celebrate({
-//   body: Joi.object().keys({
-//     name: Joi.string().min(2).max(30),
-//     link: Joi.string().pattern(URLregex),
-//     owner: Joi.string().hex().length(24).required(),
-//     likes: Joi.string().hex().length(24).required(),
-//     createdAt: Joi.date(),
-//   }),
-// }),
