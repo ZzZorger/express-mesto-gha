@@ -4,7 +4,7 @@ const UnauthorizedError = require('../errors/UnauthorizedError');
 
 // const avatarRegexp = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/;
 const linkRegexp = /(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.ru/;
-const emailRegexp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+// const emailRegexp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
-    match: emailRegexp,
+    // match: emailRegexp,
   },
   password: {
     type: String,
