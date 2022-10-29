@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const linkRegexp = /(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.ru/;
+const linkRegexp = /(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.(?:jpg|gif|png)/;
 
 const cardSchema = new mongoose.Schema({
   name: {
