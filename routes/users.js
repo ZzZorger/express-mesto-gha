@@ -4,7 +4,7 @@ const {
   getUser, getUserMe, getUserId, updateUser, updateAvatar,
 } = require('../controllers/users');
 
-const linkRegexp = /(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.(?:jpg|gif|png)/;
+const linkRegexp = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.(?:jpg|gif|png|bmp)/;
 
 router.get('/', getUser);
 router.get('/me', getUserMe);
