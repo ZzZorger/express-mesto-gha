@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const linkRegexp = /(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.ru/;
+
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -10,7 +12,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    match: /(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.ru/,
+    match: linkRegexp,
   },
   owner: {
     type: mongoose.ObjectId,
