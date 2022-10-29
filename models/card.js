@@ -12,6 +12,7 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
+    match: URLregex,
   },
   owner: {
     type: mongoose.ObjectId,
@@ -22,7 +23,6 @@ const cardSchema = new mongoose.Schema({
     type: [mongoose.ObjectId],
     ref: 'user',
     default: [],
-    match: URLregex,
   },
   createdAt: {
     type: Date,

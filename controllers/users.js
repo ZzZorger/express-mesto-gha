@@ -1,9 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const validator = require('validator');
 const BadRequestError = require('../errors/BadRequestError');
 const ConflictError = require('../errors/ConflictError');
-const ForbiddenError = require('../errors/ForbiddenError');
 const NotFoundError = require('../errors/NotFoundError');
 const User = require('../models/user');
 
@@ -46,9 +44,6 @@ module.exports.getUserId = (req, res, next) => {
     });
 };
 module.exports.createUser = (req, res, next) => {
-  if (!validator.isEmail(req.body.email)) {
-    throw new ForbiddenError('Неверно введен email');
-  }
   const {
     name, about, avatar, email,
   } = req.body;
@@ -109,5 +104,9 @@ module.exports.login = (req, res, next) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.status(200).cookie('token', token, { maxAge: 3600000 * 24 * 7, httpOnly: true }).send({ token });
     })
+    .catch(next);
+};
+module.exports.logout = (req, res, next) => {
+  res.clearCookie('token').send({ message: 'Выход' })
     .catch(next);
 };

@@ -7,7 +7,7 @@ const bodyParser = require('body-parser');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 const auth = require('./middlewares/auth');
-const { login, createUser } = require('./controllers/users');
+const { login, createUser, logout } = require('./controllers/users');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFoundError = require('./errors/NotFoundError');
 
@@ -40,6 +40,7 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 app.use(auth);
+app.get('/signout', logout);
 app.use('/users', userRouter);
 app.use('/cards', cardRouter);
 app.use('*', (req, res, next) => (
