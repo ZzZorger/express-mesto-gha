@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
-const avatarRegexp = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/;
+// const avatarRegexp = /(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|gif|png)/;
+const linkRegexp = /(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.ru/;
 const emailRegexp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 const userSchema = new mongoose.Schema({
@@ -21,7 +22,7 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-    match: avatarRegexp,
+    match: linkRegexp,
   },
   email: {
     type: String,
