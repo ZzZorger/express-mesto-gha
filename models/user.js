@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const UnauthorizedError = require('../errors/UnauthorizedError');
 
-const linkRegexp = /(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.(?:jpg|gif|png)/;
+const linkRegexp = /http[s]?:\/\/(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*,]|(?:%[0-9a-fA-F][0-9a-fA-F]))+\.(?:jpg|gif|png|bmp)/;
 const emailRegexp = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 const userSchema = new mongoose.Schema({
